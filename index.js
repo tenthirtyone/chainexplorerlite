@@ -1,25 +1,23 @@
 const API = require("./lib/api");
-const config = require("./config");
 const Logger = require("./lib/logger");
 
-class Explorer {
-  constructor(config) {
-    this.config = config;
-    this.logger = new Logger("Explorer");
+class App {
+  constructor() {
+    this.logger = new Logger("App");
     this.api = new API();
   }
 
   start() {
-    this.logger.info("Explorer starting...");
+    this.logger.info("App starting...");
     // Start DB
     this.api.start();
-    this.logger.info("Explorer started.");
+    this.logger.info("App started.");
   }
 }
 
 if (require.main === module) {
-  const explorer = new Explorer();
-  explorer.start();
+  const app = new App();
+  app.start();
 } else {
-  module.exports = Explorer;
+  module.exports = App;
 }
