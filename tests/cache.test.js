@@ -1,7 +1,7 @@
 const expect = require("expect");
-const Cache = require("../lib/cache").Cache;
-const cache1 = require("../lib/cache").cache;
-const cache2 = require("../lib/cache").cache;
+const { Cache } = require("../lib/cache");
+const cache1 = require("../lib/cache").sharedCache;
+const cache2 = require("../lib/cache").sharedCache;
 
 describe("Cache", () => {
   let cache;

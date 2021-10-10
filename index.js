@@ -2,7 +2,7 @@ require("dotenv").config();
 const API = require("./lib/api");
 const Logger = require("./lib/logger");
 
-class App {
+class Explorer {
   constructor() {
     this.logger = new Logger("App");
     this.api = new API();
@@ -17,8 +17,8 @@ class App {
 }
 
 if (require.main === module) {
-  const app = new App();
-  app.start();
+  const explorer = new Explorer();
+  explorer.start();
 } else {
-  module.exports = App;
+  module.exports = Explorer;
 }
