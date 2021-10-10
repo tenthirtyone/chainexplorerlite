@@ -26,10 +26,16 @@ describe("Infura", () => {
   });
 
   it("adds a tx to the job queue", () => {
-    infura.addTxToQueue(textTx);
+    infura.addTxToQueue(testTx.hash);
 
     expect(infura.queue.length).toBe(1);
-    expect(infura.queue[0].params).toBe(testBlock.number);
-    expect(infura.queue[0].op).toBe("getBlock");
+    expect(infura.queue[0].params).toBe(testTx.hash);
+    expect(infura.queue[0].op).toBe("getTransaction");
+  });
+
+  it("fetches the latest block number", async () => {
+    let number = await infura.getLatestBlockNumber();
+
+    expect(number > 13392228).toBe(true); // 13392228 latest at time of test
   });
 });

@@ -55,4 +55,43 @@ describe("DB", () => {
 
     expect(b.transactions.length).toBe(1);
   });
+
+  it("adds blocks to a report", async () => {
+    db.Block.build({
+      number: 1,
+      hash: "lolol",
+    }).save();
+
+    db.Transaction.build({
+      hash: "hashlolol",
+      blockNumber: 1,
+    }).save();
+
+    let blocks = await db.Block.findAll({
+      where: { number: 1 },
+      include: db.Transaction,
+    });
+
+    let b = blocks[0];
+
+    const report = db.Report.build({
+      reportId: 1,
+      startBlock: 1,
+      endBlock: 1,
+      status: "complete",
+    });
+
+    report.addBlocks([b]);
+
+    await report.save();
+
+    let reports = await db.Report.findAll({
+      include: { model: db.Block, include: db.Transaction },
+    });
+
+    let r = reports[0];
+
+    expect(r.blocks.length).toBe(1);
+    expect(r.blocks[0].transactions.length).toBe(1);
+  });
 });
