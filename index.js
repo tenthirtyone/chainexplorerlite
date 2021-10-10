@@ -1,3 +1,4 @@
+require("dotenv").config();
 const API = require("./lib/api");
 const Logger = require("./lib/logger");
 

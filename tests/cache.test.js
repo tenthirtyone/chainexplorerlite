@@ -1,5 +1,7 @@
 const expect = require("expect");
-const Cache = require("../lib/cache");
+const Cache = require("../lib/cache").Cache;
+const cache1 = require("../lib/cache").cache;
+const cache2 = require("../lib/cache").cache;
 
 describe("Cache", () => {
   let cache;
@@ -35,5 +37,10 @@ describe("Cache", () => {
 
     expect(cache.exists(0)).toBe(false);
     expect(cache.exists(1)).toBe(true);
+  });
+  it("has a singleton pattern for sharing across the app", () => {
+    cache1.add(0, 1234);
+
+    expect(cache2.exists(0)).toBe(true);
   });
 });
