@@ -1,42 +1,63 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Card from "../Card";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
-export default function Transaction({ senders, receivers, contracts }) {
-  function formatEth(val) {
-    if (val === 0) return val;
+function formatEth(val) {
+  if (val === 0) return val;
 
-    return val / 1e18;
+  return val / 1e18;
+}
+
+function TransactionList({ txs, contractDictionary, heading }) {
+  const defaultPageSize = 25;
+  const [pageSize, setPageSize] = useState(defaultPageSize);
+
+  function loadMore() {
+    setPageSize(pageSize + defaultPageSize);
   }
 
+  const data = Object.keys(txs);
+
+  return (
+    <Fragment>
+      {data.length > 0 && <Typography variant="h4">{heading}</Typography>}
+      {data.slice(0, pageSize).map((key) => {
+        return (
+          <Card
+            key={key}
+            label={key}
+            heading={formatEth(txs[key])}
+            isContract={contractDictionary.indexOf(key)}
+          />
+        );
+      })}
+      {pageSize < data.length && (
+        <Button variant="contained" onClick={loadMore}>
+          Load More
+        </Button>
+      )}
+    </Fragment>
+  );
+}
+
+export default function Transaction({ senders, receivers, contracts }) {
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} md={6}>
-        <Typography variant="h4">Senders</Typography>
-        {Object.keys(senders).map((key) => {
-          return (
-            <Card
-              key={key}
-              label={key}
-              heading={formatEth(senders[key])}
-              isContract={contracts.indexOf(key)}
-            />
-          );
-        })}
+        <TransactionList
+          heading={"Senders"}
+          txs={senders}
+          contractDictionary={contracts}
+        />
       </Grid>
       <Grid item xs={12} md={6}>
-        <Typography variant="h4">Receivers</Typography>
-        {Object.keys(receivers).map((key) => {
-          return (
-            <Card
-              key={key}
-              label={key}
-              heading={formatEth(receivers[key])}
-              isContract={contracts.indexOf(key)}
-            />
-          );
-        })}
+        <TransactionList
+          heading={"Receivers"}
+          txs={receivers}
+          contractDictionary={contracts}
+        />
       </Grid>
     </Grid>
   );

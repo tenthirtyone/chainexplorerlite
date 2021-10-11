@@ -13,9 +13,8 @@ export default function Summary({ summary }) {
     <Grid container spacing={4}>
       {Object.keys(summary).map((cardItem) => {
         return (
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} key={cardItem}>
             <Card
-              key={cardItem}
               label={capitalizeCamelCase(cardItem)}
               heading={summary[cardItem]}
             />
