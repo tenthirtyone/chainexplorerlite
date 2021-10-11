@@ -22,25 +22,18 @@ describe("Cache", () => {
 
     expect(cache.get(testKey)).toBe(testValue);
   });
-  it("stale items are removed from the cache", () => {
-    cache = new Cache({ maxAge: 1 });
-
-    cache.add(testKey, testValue);
-    setTimeout(() => {
-      expect(cache.exists(testKey)).toBe(false);
-    }, 2);
-  });
-  it("rotates the oldest item out of the cache", () => {
-    cache = new Cache({ max: 1 });
-    cache.add(0, 0);
-    cache.add(1, 1);
-
-    expect(cache.exists(0)).toBe(false);
-    expect(cache.exists(1)).toBe(true);
-  });
   it("has a singleton pattern for sharing across the app", () => {
     cache1.add(0, 1234);
 
     expect(cache2.exists(0)).toBe(true);
+  });
+  it("tracks the highest block number in the cache", () => {
+    const reallyBigNumber = 1e18;
+    cache.add(reallyBigNumber, true);
+    cache.add(0, true);
+    cache.add(1, true);
+    cache.add(2, true);
+
+    expect(cache.highestBlock).toBe(reallyBigNumber);
   });
 });

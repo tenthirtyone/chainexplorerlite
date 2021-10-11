@@ -17,12 +17,13 @@ function App() {
 
   const [isSearching, setIsSearching] = useState(false);
 
-  const { summary, senders, receivers, contracts } = appData;
+  const { startBlock, endBlock, summary, senders, receivers, contracts } =
+    appData;
 
   return (
     <div className="App">
       <Container maxWidth="lg">
-        <AppBar />
+        <AppBar startBlock={startBlock} endBlock={endBlock} />
         <Search setAppData={setAppData} setIsSearching={setIsSearching} />
         {isSearching ? (
           <div>Searching</div>
