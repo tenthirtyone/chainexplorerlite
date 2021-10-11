@@ -1,6 +1,5 @@
 require("dotenv").config();
 const API = require("./lib/api");
-
 const Infura = require("./lib/infura");
 const Reporter = require("./lib/reporter");
 const { sharedCache } = require("./lib/cache");
@@ -20,7 +19,6 @@ class Explorer {
 
   start() {
     this.logger.info("App starting...");
-
     this.api.start();
     this.infura.start();
     this.logger.info("App started.");
@@ -33,6 +31,17 @@ class Explorer {
     );
 
     return report;
+  }
+
+  async lastNBlockReport(lastNBlocks) {
+    if (!parseInt(lastNBlocks)) {
+      lastNBlocks = 0;
+    }
+
+    const endBlock = this.sharedCache.highestBlock;
+    const startBlock = this.sharedCache.highestBlock - lastNBlocks;
+
+    return await this.createReport(startBlock, endBlock);
   }
 
   async fetchLastNBlocks(count) {
