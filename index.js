@@ -1,6 +1,7 @@
 require("dotenv").config();
 const API = require("./lib/api");
 const DB = require("./lib/db");
+const Infura = require("./lib/infura");
 const Reporter = require("./lib/reporter");
 const { sharedCache } = require("./lib/cache");
 const Logger = require("./lib/logger");
@@ -10,27 +11,31 @@ class Explorer {
     this.logger = new Logger("App");
     this.config = { ...Explorer.DEFAULTS, ...config };
     this.api = new API();
+    this.infura = new Infura();
     this.db = new DB();
     this.reporter = new Reporter();
+    this.sharedCache = sharedCache;
   }
 
   start() {
     this.logger.info("App starting...");
-    // Start DB
+    this.populateCache();
     this.api.start();
+    this.infura.start();
     this.logger.info("App started.");
   }
 
   async populateCache() {
     const { cacheLimit } = this.config;
     const blocks = await this.db.Block.findAll({ limit: cacheLimit });
-    console.log(blocks);
-    // add each block to the sharedCache
+
+    blocks.forEach((block) => {
+      this.sharedCache.add(block.number, block);
+    });
   }
 
   async createReport(startBlock, endBlock) {
     let report = this.reporter.createReport(startBlock, endBlock);
-    console.log(report);
   }
 
   static get DEFAULTS() {
