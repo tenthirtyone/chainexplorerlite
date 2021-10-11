@@ -38,7 +38,51 @@ class Explorer {
   }
 
   async createReport(startBlock, endBlock) {
-    return await this.reporter.createReport(startBlock, endBlock);
+    const data = await this.reporter.createReport(startBlock, endBlock);
+    const addresses = [];
+
+    const addressData = {
+      address: "",
+      sent: 0,
+      received: 0,
+      isContract: false,
+    };
+
+    const summary = {
+      totalSent: 0,
+      totalUncles: 0,
+    };
+
+    data.forEach((block) => {
+      summary.totalUncles += block.uncles;
+
+      block.transactions.forEach((tx) => {
+        summary.totalSent += tx.value;
+
+        if (addresses[tx.to] === undefined) {
+          addresses[tx.to] = {
+            ...addressData,
+            address: tx.to,
+            received: tx.value,
+            isContract: tx.input.length > 2,
+          };
+        } else {
+          addresses[tx.to].received += tx.value;
+        }
+
+        if (addresses[tx.from] === undefined) {
+          addresses[tx.from] = {
+            ...addressData,
+            address: tx.from,
+            sent: tx.value,
+          };
+        } else {
+          addresses[tx.from].sent += tx.value;
+        }
+
+        console.log(addresses);
+      });
+    });
   }
 
   async loadLastNBlocks(count) {
