@@ -47,11 +47,15 @@ class Explorer {
   }
 
   async createReport(startBlock, endBlock) {
-    if (!endBlock) {
-      endBlock = this.infura.highestBlock;
-    }
-
-    const report = await this.reporter.createReport(startBlock, endBlock);
+    const report = await this.reporter.createReport(
+      startBlock,
+      endBlock === "null" ||
+        endBlock === undefined ||
+        endBlock === null ||
+        !endBlock
+        ? this.infura.highestBlock
+        : endBlock
+    );
 
     return report;
   }
