@@ -15,18 +15,16 @@ describe("Reporter", () => {
 
   afterEach(() => {});
 
-  it("checks the shared cache for block data", async () => {
+  it("gets the report data from cached block data", async () => {
     const block = reporter.db.Block.build({ ...testBlock });
-    await block.save();
 
     sharedCache.add(block.number, block);
+    sharedCache.add(block.number + 1, block);
+    sharedCache.add(block.number + 2, block);
+    sharedCache.add(block.number + 3, block);
 
-    await reporter.createReport(testBlock.number, testBlock.number);
+    let r = await reporter.createReport(testBlock.number, testBlock.number + 3);
 
-    let r = await reporter.db.Report.findAll({ include: reporter.db.Block });
-
-    console.log(r);
-    expect();
-    sharedCache.delete(100);
+    expect(r.length).toBe(4);
   });
 });

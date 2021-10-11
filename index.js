@@ -27,7 +27,10 @@ class Explorer {
 
   async populateCache() {
     const { cacheLimit } = this.config;
-    const blocks = await this.db.Block.findAll({ limit: cacheLimit });
+    const blocks = await this.db.Block.findAll({
+      include: this.db.Transaction,
+      limit: cacheLimit,
+    });
 
     blocks.forEach((block) => {
       this.sharedCache.add(block.number, block);
@@ -35,7 +38,11 @@ class Explorer {
   }
 
   async createReport(startBlock, endBlock) {
-    let report = this.reporter.createReport(startBlock, endBlock);
+    return await this.reporter.createReport(startBlock, endBlock);
+  }
+
+  async loadLastNBlocks(count) {
+    await this.infura.loadLastNBlocks(count);
   }
 
   static get DEFAULTS() {
