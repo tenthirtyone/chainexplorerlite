@@ -29,7 +29,9 @@ export default function Search({ setAppData, setIsSearching }) {
     let res, data;
     try {
       res = await fetch(
-        `api/report/range/${startBlock}/${endBlock ? endBlock : null}`
+        `api/report/range/${startBlock ? startBlock : null}/${
+          endBlock ? endBlock : null
+        }`
       );
       data = await res.json();
     } catch (e) {
@@ -45,7 +47,7 @@ export default function Search({ setAppData, setIsSearching }) {
     setIsSearching(true);
     let res, data;
     try {
-      res = await fetch(`api/report/last/${lastNBlocks}`);
+      res = await fetch(`api/report/last/${lastNBlocks ? lastNBlocks : null}`);
       data = await res.json();
     } catch (e) {
       console.log(e);

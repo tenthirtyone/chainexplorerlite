@@ -28,13 +28,8 @@ class Explorer {
 
   async createReport(startBlock, endBlock) {
     const report = await this.reporter.createReport(
-      startBlock,
-      endBlock === "null" ||
-        endBlock === undefined ||
-        endBlock === null ||
-        !endBlock
-        ? this.infura.highestBlock
-        : endBlock
+      !parseInt(startBlock) ? this.sharedCache.highestBlock : startBlock,
+      !parseInt(endBlock) ? this.sharedCache.highestBlock : endBlock
     );
 
     return report;
