@@ -21,7 +21,7 @@ class Explorer {
     this.logger.info("App starting...");
     this.populateCache();
     this.api.start();
-    this.infura.start();
+    //this.infura.start();
     this.logger.info("App started.");
   }
 
@@ -41,16 +41,17 @@ class Explorer {
     const data = await this.reporter.createReport(startBlock, endBlock);
     const addresses = [];
 
-    const addressData = {
-      address: "",
-      sent: 0,
-      received: 0,
-      isContract: false,
-    };
+    const senders = [];
+    const receivers = [];
+    const contracts = [];
 
-    const summary = {
+    let summary = {
       totalSent: 0,
       totalUncles: 0,
+      uniqueSenders: 0,
+      uniqueReceivers: 0,
+      contractsCreated: 0,
+      uniqueAddresses: 0,
     };
 
     data.forEach((block) => {
@@ -59,30 +60,40 @@ class Explorer {
       block.transactions.forEach((tx) => {
         summary.totalSent += tx.value;
 
-        if (addresses[tx.to] === undefined) {
-          addresses[tx.to] = {
-            ...addressData,
-            address: tx.to,
-            received: tx.value,
-            isContract: tx.input.length > 2,
-          };
+        // Null addr = contract created (0x000...)
+        if (tx.to === null) {
+          summary.contractsCreated++;
         } else {
-          addresses[tx.to].received += tx.value;
+          senders[tx.to] === undefined
+            ? (senders[tx.to] = tx.value)
+            : (senders[tx.to] += tx.value);
         }
 
-        if (addresses[tx.from] === undefined) {
-          addresses[tx.from] = {
-            ...addressData,
-            address: tx.from,
-            sent: tx.value,
-          };
-        } else {
-          addresses[tx.from].sent += tx.value;
+        receivers[tx.from] === undefined
+          ? (receivers[tx.from] = tx.value)
+          : (receivers[tx.from] += tx.value);
+
+        // 0x by default, contract call data check
+        if (tx.input.length > 2) {
+          contracts.push(tx.to);
         }
 
-        console.log(addresses);
+        // unique addrs
+        addresses[tx.to] = true;
+        addresses[tx.from] = true;
       });
     });
+
+    summary.uniqueSenders = Object.keys(senders).length;
+    summary.uniqueReceivers = Object.keys(receivers).length;
+    summary.uniqueAddresses = Object.keys(addresses).length;
+
+    return {
+      summary,
+      senders,
+      receivers,
+      contracts,
+    };
   }
 
   async loadLastNBlocks(count) {
