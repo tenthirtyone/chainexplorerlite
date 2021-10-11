@@ -11,6 +11,7 @@ class Explorer {
     this.logger = new Logger("App");
     this.config = { ...Explorer.DEFAULTS, ...config };
     this.api = new API();
+    this.api.express.set("explorer", this);
     this.infura = new Infura();
     this.db = new DB();
     this.reporter = new Reporter();
@@ -21,83 +22,42 @@ class Explorer {
     this.logger.info("App starting...");
     this.populateCache();
     this.api.start();
-    //this.infura.start();
+    this.infura.start();
     this.logger.info("App started.");
   }
 
   async populateCache() {
     const { cacheLimit } = this.config;
-    const blocks = await this.db.Block.findAll({
-      include: this.db.Transaction,
-      limit: cacheLimit,
-    });
+    let blocks = [];
 
-    blocks.forEach((block) => {
-      this.sharedCache.add(block.number, block);
-    });
+    try {
+      blocks = await this.db.Block.findAll({
+        include: this.db.Transaction,
+        limit: cacheLimit,
+      });
+      blocks.forEach((block) => {
+        this.sharedCache.add(block.number, block);
+      });
+      this.infura.highestBlock = blocks[blocks.length - 1].number;
+    } catch (e) {
+      this.logger.error(
+        "Error Populating Cache - if this is the first run/no blocks table it is safe to ignore this"
+      );
+    }
   }
 
   async createReport(startBlock, endBlock) {
-    const data = await this.reporter.createReport(startBlock, endBlock);
-    const addresses = [];
+    if (!endBlock) {
+      endBlock = this.infura.highestBlock;
+    }
 
-    const senders = [];
-    const receivers = [];
-    const contracts = [];
+    const report = await this.reporter.createReport(startBlock, endBlock);
 
-    let summary = {
-      totalSent: 0,
-      totalUncles: 0,
-      uniqueSenders: 0,
-      uniqueReceivers: 0,
-      contractsCreated: 0,
-      uniqueAddresses: 0,
-    };
-
-    data.forEach((block) => {
-      summary.totalUncles += block.uncles;
-
-      block.transactions.forEach((tx) => {
-        summary.totalSent += tx.value;
-
-        // Null addr = contract created (0x000...)
-        if (tx.to === null) {
-          summary.contractsCreated++;
-        } else {
-          senders[tx.to] === undefined
-            ? (senders[tx.to] = tx.value)
-            : (senders[tx.to] += tx.value);
-        }
-
-        receivers[tx.from] === undefined
-          ? (receivers[tx.from] = tx.value)
-          : (receivers[tx.from] += tx.value);
-
-        // 0x by default, contract call data check
-        if (tx.input.length > 2) {
-          contracts.push(tx.to);
-        }
-
-        // unique addrs
-        addresses[tx.to] = true;
-        addresses[tx.from] = true;
-      });
-    });
-
-    summary.uniqueSenders = Object.keys(senders).length;
-    summary.uniqueReceivers = Object.keys(receivers).length;
-    summary.uniqueAddresses = Object.keys(addresses).length;
-
-    return {
-      summary,
-      senders,
-      receivers,
-      contracts,
-    };
+    return report;
   }
 
-  async loadLastNBlocks(count) {
-    await this.infura.loadLastNBlocks(count);
+  async fetchLastNBlocks(count) {
+    await this.infura.fetchLastNBlocks(count);
   }
 
   static get DEFAULTS() {
