@@ -23,7 +23,10 @@ describe("Reporter", () => {
     sharedCache.add(block.number + 2, block);
     sharedCache.add(block.number + 3, block);
 
-    let r = await reporter.createReport(testBlock.number, testBlock.number + 3);
+    let r = await reporter.getReportData(
+      testBlock.number,
+      testBlock.number + 3
+    );
 
     expect(r.length).toBe(4);
   });

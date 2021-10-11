@@ -39,6 +39,7 @@ describe("DB", () => {
     db.Block.build({
       number: 1,
       hash: "lolol",
+      uncles: 0,
     }).save();
 
     db.Transaction.build({
@@ -60,6 +61,7 @@ describe("DB", () => {
     db.Block.build({
       number: 1,
       hash: "lolol",
+      uncles: 0,
     }).save();
 
     db.Transaction.build({
