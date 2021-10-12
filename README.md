@@ -132,7 +132,19 @@ Sender/Receiver data will lazily display each list with a 'show more' button loc
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- ROADMAP -->
+## Testing
+
+Backend:
+
+```sh
+$ mocha ./test
+```
+
+Client
+
+```sh
+$ npm run test
+```
 
 ## Assumptions / Tradeoffs
 
