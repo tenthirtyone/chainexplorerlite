@@ -34,18 +34,24 @@ class Explorer {
     this.infura.start();
     this.logger.info("App started.");
   }
+
+  stop() {
+    this.api.stop();
+    this.infura.stop();
+  }
   /**
    * Creates a report with the inclusive range startBlock - endBlock
    * @param  {Integer} startBlock
    * @param  {Integer} endBlock
    */
   async createReport(startBlock, endBlock) {
-    const report = await this.reporter.createReport(
-      !parseInt(startBlock) ? this.sharedCache.highestBlock : startBlock,
-      !parseInt(endBlock) ? this.sharedCache.highestBlock : endBlock
-    );
+    startBlock = parseInt(startBlock, 10) || this.sharedCache.highestBlock;
+    endBlock = parseInt(endBlock, 10) || this.sharedCache.highestBlock;
 
-    return report;
+    const blockNumberList = this.createListOfBlockNumbers(startBlock, endBlock);
+    const blockData = await this.infura.fetchListOfBlocks(blockNumberList);
+
+    return this.reporter.createReport(startBlock, endBlock, blockData);
   }
 
   /**
@@ -54,21 +60,20 @@ class Explorer {
    * @param  {Integer} lastNBlocks
    */
   async lastNBlockReport(lastNBlocks) {
-    if (!parseInt(lastNBlocks)) {
-      lastNBlocks = 0;
-    }
+    lastNBlocks = parseInt(lastNBlocks, 10) || 0;
 
     const endBlock = this.sharedCache.highestBlock;
     const startBlock = this.sharedCache.highestBlock - lastNBlocks;
 
     return await this.createReport(startBlock, endBlock);
   }
-  /**
-   * Convenience method to pre-load the database with block data.
-   * @param  {} count
-   */
-  async fetchLastNBlocks(count) {
-    await this.infura.fetchLastNBlocks(count);
+
+  createListOfBlockNumbers(startBlock, endBlock) {
+    const list = [];
+    for (let i = startBlock; i <= endBlock; i++) {
+      list.push(i);
+    }
+    return list;
   }
 
   static get DEFAULTS() {
