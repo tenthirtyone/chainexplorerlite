@@ -9,9 +9,9 @@
 
 ## About The Project
 
-![Project Screen Shot](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/systemdesign.jpg?raw=true)
+![Project Screen Shot (in docs folder)](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/systemdesign.jpg?raw=true)
 
-This repo contains a basic block explorer that follows the above system design. It is written as a monolithic application, but is intended to demonstrate the principles required to build the above at scale. The project supports including the code as a NodeJS module, and may also be run directly from the command line or packaged in a docker container.
+This repo contains a basic block explorer that follows the above system design (All images reside in docs folder). It is written as a monolithic application, but is intended to demonstrate the principles required to build the above at scale. The project supports including the code as a NodeJS module, and may also be run directly from the command line or packaged in a docker container.
 
 The user may interact with this module in two ways. Through the command line or through a web gui. Instructions are provided for both. It relies on Infura for its connection to the Ethereum network and may be configured through an `.env` file, by passing individual classes config objects, or modifying each classes default configuration. Additional references are provided through JSdoc output located in the `docs` directory.
 
@@ -124,9 +124,9 @@ Will start the application
 ### Web Interface
 
 A GUI is available @ `localhost:4000`, or you may enter the `client` directory and run it in developer mode with `npm run start`.
-![GUI Screen Shot](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/gui-startup.png?raw=true)
-![GUI Report Screen Shot](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/gui-report.png?raw=true)
-![GUI Report Contract Screen Shot](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/gui-contract.png?raw=true)
+![GUI Screen Shot (in docs folder)](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/gui-startup.png?raw=true)
+![GUI Report Screen Shot (in docs folder)](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/gui-report.png?raw=true)
+![GUI Report Contract Screen Shot (in docs folder)](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/gui-contract.png?raw=true)
 
 Sender/Receiver data will lazily display each list with a 'show more' button located below its respective list.
 
