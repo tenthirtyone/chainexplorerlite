@@ -18,20 +18,4 @@ describe("Reporter", () => {
   afterEach(() => {
     reporter.stop();
   });
-
-  it("gets the report data from cached block data", async () => {
-    const block = reporter.db.Block.build({ ...testBlock });
-
-    sharedCache.add(block.number, block);
-    sharedCache.add(block.number + 1, block);
-    sharedCache.add(block.number + 2, block);
-    sharedCache.add(block.number + 3, block);
-
-    let r = await reporter.getReportData(
-      testBlock.number,
-      testBlock.number + 3
-    );
-
-    expect(r.length).toBe(4);
-  });
 });

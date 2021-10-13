@@ -16,7 +16,7 @@ describe("DB", () => {
   });
 
   afterEach(async () => {
-    await db.sequelize.drop();
+    await db.sequelize.drop({ force: true });
     db.close();
   });
 
