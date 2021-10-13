@@ -13,6 +13,7 @@ describe("Infura", () => {
 
   beforeEach(async () => {
     infura = new Infura();
+    infura.start();
   });
 
   afterEach(async () => {
