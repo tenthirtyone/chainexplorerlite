@@ -183,3 +183,7 @@ $ npm run test
 - DoS
 
   Sensible defensive limitations to the reporting are required. Having one jerk user, or a malicious competitor, that would constantly hammer on reports from the Genesis block to the most recent block would be an issue. Instead of engineering against what would quickly become a whack-a-mole/hydra problem, monetize it and make it a subscription or pay-per-use solution.
+
+- Reorgs
+
+  I've added some weak upsert patterns to the function that saves blocks/transactions. It's not ideal but will prevent the DB from throwing an error when a transaction is reorged into another block and a duplicate record is being written with a colliding hash. If we wanted to store the full historic data, I could add a composite key to the model for hash/block number on both models, but the application would need to flag/mark the stale blocks to make sure they do not show up in reports (unless desired).
