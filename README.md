@@ -74,7 +74,7 @@ node
 From here, you may see the infura service begin indexing blocks as they are mined. That is OK. Use the following command to fetch additional historical data:
 
 ```sh
-> explorer.fetchLastNBlocks(5)
+> explorer.fetchHistoricalBlockData(startBlock, endBlock)
 03:20:06.247Z  INFO Infura: Adding block 13401266 to work queue
 03:20:06.251Z  INFO Infura: Adding block 13401265 to work queue
 03:20:06.251Z  INFO Infura: Adding block 13401264 to work queue
@@ -82,9 +82,9 @@ From here, you may see the infura service begin indexing blocks as they are mine
 03:20:06.252Z  INFO Infura: Adding block 13401262 to work queue
 ```
 
-Replace 5 with your desired historical amount. I advise keeping it around 20-50 as the in-memory db journal can be a little overwhelmed and the Infura service is scheduled to run at 25 requests per second, well over the Ethereum Network throughput of 15tps.
+Replace with your desired historical amount if you like. It is not required to run the application, requests for block data that is not in the db/cache'd will be fetched from Infura. This function is included for discussion w/r/t production and scale.
 
-Also, if you allow the infura service to run for a long time you may experience a slight startup delay while the Cache service populates itself with the previously saved blocks in the database. (It took ~5-10 seconds with a query limit of 10,000).
+Also, if you allow the infura service to run for a long time you may experience a slight startup delay while the Cache service populates itself with the previously saved blocks in the database. (It took ~5-10 seconds with a query limit of 10,000). If you hit the cache limit I am using an LRU under the hood and the most recent blocks will always be stored. The justification being that the user may will to drill down within reports.
 
 From here, you may leave it running from the Node cli and interact with the CLI directly using the instructions in the following section.
 
@@ -98,8 +98,8 @@ From here, you may leave it running from the Node cli and interact with the CLI 
 
 ```sh
 $ node
-> let report; explorer.createReport([startBlock], [endBlock]).then(data => report = data)
-> let report; explorer.lastNBlockReport([blocksBack]).then(data => report = data)
+> let report; explorer.createRangeReport(startBlock, endBlock).then(data => report = data)
+> let report; explorer.createLastNReport(blocksBack).then(data => report = data)
 ```
 
 Summary and report data will be in the report Object.
@@ -123,7 +123,7 @@ Will start the application
 
 ### Web Interface
 
-A GUI is available @ `localhost:4000`, or you may enter the `client` directory and run it in developer mode with `npm run start`.
+A GUI is available @`localhost:4000`, or you may enter the `client` directory and run it in developer mode with `npm run start`.
 ![GUI Screen Shot (in docs folder)](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/gui-startup.png?raw=true)
 ![GUI Report Screen Shot (in docs folder)](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/gui-report.png?raw=true)
 ![GUI Report Contract Screen Shot (in docs folder)](https://github.com/tenthirtyone/chainexplorer/blob/master/docs/gui-contract.png?raw=true)
@@ -140,6 +140,12 @@ Backend:
 $ mocha ./test
 ```
 
+or
+
+```
+$ nyc mocha ./test
+```
+
 Client
 
 ```sh
@@ -150,7 +156,7 @@ $ npm run test
 
 - Production Data
 
-  Up front, this would be a very write-heavy application. It would index the entire chain and afterward only write with the new blocks that come in. At which time it becomes read-heavy.
+  Up front, this would be a very write-heavy application. In product I would index the entire chain and afterward only write with the new blocks that come in. At which time it becomes read-heavy.
 
 - Caching
 
@@ -162,16 +168,18 @@ $ npm run test
 
 - Database
 
-  The first real limitation I hit was the in-memory db having a journaling issue where transactions were saving before their blocks were written. This messed up the associations and led to missing data. At scale, an enterprise db or even system-level db service would reduce this bottleneck.
+  The first real limitation I hit was the in-memory db having a journaling issue where transactions were saving before their blocks were written. This messed up the associations and led to missing data. At scale, an enterprise db or even system-level db service would reduce this bottleneck. The DB will warn/error on duplicate saves, however this is uncommon as the services check the cache, and the cache is loaded from the db at startup.
 
 - Data Availability
 
-  I chose not to rely directly on the infura RPC to fetch data for the user. If the user experience is the priority, then having cache'd chain data is going to be the most effective way to make the app responsive. It would be reasonable to provide a fallback while the chain indexes that relies on the RPC but I felt that capability was demonstrated based on the existing service without implementing it directly.
+  I chose to build around the cache strategy. Although, if the user requests data that is not cache'd the Infura service will request the block data from Infura, cache, and save the data. If support for massive queries is desired caching the blocks and their data is a good first step.
 
 - Report Parsing & Formatting
 
   Because I was supporting a CLI and Web UI, I chose to put the report formatting in the report service. The `.forEach` loop does block the event loop. However, it's not performing major tasks, like crypto, just basic Math. At scale, it would make sense to pass this off to a worker pool or pass the raw report data to the user device and let the front end handle it.
 
+  I also considered persisting the Reports. The data models still exist. In my planning I considered the following relationships: Reports.hasMany(Blocks.hasMany(Transactions)); Blocks.belongsToMany(Reports). I chose not to go this route, instead generating the report ad-hoc. However, this could be a possible solution to large queries -> Create the report in the db, run the job to fetch/cache the data and then on the front end display the users reports and % of completion. This would have taken additional lifts, possibly long polling, a socket connection, or email alerting/delivery, to give the user a timely display of their report status.
+
 - DoS
 
-  Sensible defensive limitations to the reporting. Having one jerk user, or a malicious competitor, that would constantly hammer on reports from the Genesis block to the most recent block would be an issue.
+  Sensible defensive limitations to the reporting are required. Having one jerk user, or a malicious competitor, that would constantly hammer on reports from the Genesis block to the most recent block would be an issue. Instead of engineering against what would quickly become a whack-a-mole/hydra problem, monetize it and make it a subscription or pay-per-use solution.

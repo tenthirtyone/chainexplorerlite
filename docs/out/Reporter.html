@@ -49,8 +49,7 @@
 
 
 <div class="description">
-    Retrieves, assembles, and parses block data from
-the sharedCache
+    Assembles, and parses block data into reports
 </div>
 
 
@@ -143,7 +142,7 @@ the sharedCache
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line11">line 11</a>
+        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -199,7 +198,7 @@ the sharedCache
     
 
     
-    <h4 class="name" id="createReport"><span class="type-signature">(async) </span>createReport<span class="signature">(startBlock, endBlock)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createLastNReport"><span class="type-signature">(async) </span>createLastNReport<span class="signature">(lastNBlocks)</span><span class="type-signature"></span></h4>
     
 
     
@@ -207,7 +206,8 @@ the sharedCache
 
 
 <div class="description">
-    Assembles the report from the cached data
+    Returns report data for the lastNBlocks from the highest
+known block
 </div>
 
 
@@ -243,36 +243,13 @@ the sharedCache
 
         <tr>
             
-                <td class="name"><code>startBlock</code></td>
+                <td class="name"><code>lastNBlocks</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">integer</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>endBlock</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">integer</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -323,7 +300,7 @@ the sharedCache
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line33">line 33</a>
+        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -359,7 +336,7 @@ the sharedCache
     
 
     
-    <h4 class="name" id="createReportId"><span class="type-signature"></span>createReportId<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createListOfBlockNumbers"><span class="type-signature"></span>createListOfBlockNumbers<span class="signature">(startBlock, endBlock)</span><span class="type-signature"></span></h4>
     
 
     
@@ -367,100 +344,8 @@ the sharedCache
 
 
 <div class="description">
-    DEPRECATED
-In my planning/design I accounted for ->
-Reports hasMany Blocks hasMany Transactions.
-I decided not to persist the reports, but
-left the models and DB schema in place as a
-jumping point for suggested feature.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line25">line 25</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="getReportData"><span class="type-signature">(async) </span>getReportData<span class="signature">(startBlock, endBlock)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Retrieves block data from the sharedCache
+    Creates an inclusive array of integers from startBlock
+to endBlock
 </div>
 
 
@@ -576,7 +461,167 @@ jumping point for suggested feature.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line118">line 118</a>
+        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createRangeReport"><span class="type-signature">(async) </span>createRangeReport<span class="signature">(startBlock, endBlock)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Returns report data from startBlock to endBlock
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>startBlock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endBlock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line58">line 58</a>
     </li></ul></dd>
     
 
@@ -620,14 +665,8 @@ jumping point for suggested feature.
 
 
 <div class="description">
-    I decided to handle this in the reporter rather than in the client
-because I am supporting the CLI and web GUI. At scale and for large
-reports sensible defaults and worker pools could stop a DoS that
-blocks the event loop.
-
-Also, because report data will rarely change, a persisting/caching
-strategy could reduce duplicate work at scale for users calling the
-same reporting parameters.
+    Parses the report data from a list of blocks from
+the infura service
 </div>
 
 
@@ -720,7 +759,7 @@ same reporting parameters.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line54">line 54</a>
+        <a href="lib_reporter_index.js.html">lib/reporter/index.js</a>, <a href="lib_reporter_index.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -772,7 +811,7 @@ same reporting parameters.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Oct 11 2021 14:28:05 GMT-0500 (Central Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Oct 12 2021 22:39:47 GMT-0500 (Central Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
