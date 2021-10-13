@@ -53,6 +53,14 @@ class Explorer {
   async createLastNReport(lastNBlocks) {
     return await this.reporter.createLastNReport(lastNBlocks);
   }
+  /**
+   * Queues historic block data requests in the infura block service
+   * @param  {Integer} startBlock
+   * @param  {Integer} endBlock
+   */
+  fetchHistoryBlockData(startBlock, endBlock) {
+    this.reporter.infura.fetchHistoryBlockData(startBlock, endBlock);
+  }
 
   static get DEFAULTS() {
     return {};
