@@ -1,5 +1,6 @@
 const expect = require("expect");
 const API = require("../lib/api");
+const { logRequest } = require("../lib/api/middleware");
 
 describe("API", () => {
   let api;
@@ -19,5 +20,17 @@ describe("API", () => {
     const { port } = api.server.address();
 
     expect(port).toBe(testPort);
+  });
+  it("logs the request method and path", () => {
+    const req = {
+      method: "GET",
+      originalUrl: "/path",
+    };
+    let testPassed = false;
+    logRequest(req, null, () => {
+      testPassed = true;
+    });
+
+    expect(testPassed).toBe(true);
   });
 });

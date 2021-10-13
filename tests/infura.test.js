@@ -4,7 +4,7 @@ const Infura = require("../lib/infura");
 const { blockData, transactionsData } = require("./data");
 
 describe("Infura", () => {
-  process.env.DATABASE_NAME = "test-infura";
+  process.env.DATABASE_NAME = "test";
   let infura;
   let testBlock = blockData;
   let testTx = transactionsData[0];
@@ -60,10 +60,30 @@ describe("Infura", () => {
     expect(block.hash).toBe(testBlock.hash);
   });
   it("fetches a list of blocks", async () => {
-    const list = [testBlock.number, testBlock.number];
+    const list = [
+      testBlock.number,
+      testBlock.number + 10,
+      testBlock.number + 100,
+    ];
+
+    infura.sharedCache.add(testBlock.number + 100, true);
 
     const blocks = await infura.fetchListOfBlocks(list);
 
-    expect(blocks.length).toBe(2);
+    expect(blocks.length).toBe(3);
+  });
+  it("will not double queue blocks", () => {
+    infura.addBlockToEndOfQueue(1e18);
+    infura.addBlockToEndOfQueue(1e18);
+    infura.addBlockToFrontOfQueue(1e18);
+
+    expect(infura.queue.length).toBe(1);
+  });
+  it("queues historical data at the end", () => {
+    infura.queue.push(null);
+    infura.fetchHistoricalBlockData(2000, 2010);
+
+    expect(infura.queue.length).toBe(12);
+    expect(infura.queue[0]).toBe(null);
   });
 });
