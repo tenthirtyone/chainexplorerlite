@@ -1,6 +1,5 @@
 require("dotenv").config();
 const API = require("./lib/api");
-const Infura = require("./lib/infura");
 const Reporter = require("./lib/reporter");
 const { sharedCache } = require("./lib/cache");
 const Logger = require("./lib/logger");
@@ -20,8 +19,6 @@ class Explorer {
     this.config = { ...Explorer.DEFAULTS, ...config };
     this.api = new API();
     this.api.express.set("explorer", this);
-    this.infura = new Infura();
-
     this.reporter = new Reporter();
     this.sharedCache = sharedCache;
   }
@@ -31,27 +28,21 @@ class Explorer {
   start() {
     this.logger.info("App starting...");
     this.api.start();
-    this.infura.start();
+    this.reporter.start();
     this.logger.info("App started.");
   }
 
   stop() {
     this.api.stop();
-    this.infura.stop();
+    this.reporter.stop();
   }
   /**
    * Creates a report with the inclusive range startBlock - endBlock
    * @param  {Integer} startBlock
    * @param  {Integer} endBlock
    */
-  async createReport(startBlock, endBlock) {
-    startBlock = parseInt(startBlock, 10) || this.sharedCache.highestBlock;
-    endBlock = parseInt(endBlock, 10) || this.sharedCache.highestBlock;
-
-    const blockNumberList = this.createListOfBlockNumbers(startBlock, endBlock);
-    const blockData = await this.infura.fetchListOfBlocks(blockNumberList);
-
-    return this.reporter.createReport(startBlock, endBlock, blockData);
+  async createRangeReport(startBlock, endBlock) {
+    return await this.reporter.createRangeReport(startBlock, endBlock);
   }
 
   /**
@@ -59,21 +50,8 @@ class Explorer {
    * going back lastNBlocks in time
    * @param  {Integer} lastNBlocks
    */
-  async lastNBlockReport(lastNBlocks) {
-    lastNBlocks = parseInt(lastNBlocks, 10) || 0;
-
-    const endBlock = this.sharedCache.highestBlock;
-    const startBlock = this.sharedCache.highestBlock - lastNBlocks;
-
-    return await this.createReport(startBlock, endBlock);
-  }
-
-  createListOfBlockNumbers(startBlock, endBlock) {
-    const list = [];
-    for (let i = startBlock; i <= endBlock; i++) {
-      list.push(i);
-    }
-    return list;
+  async createLastNReport(lastNBlocks) {
+    return await this.reporter.createLastNReport(lastNBlocks);
   }
 
   static get DEFAULTS() {
