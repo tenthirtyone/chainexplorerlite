@@ -4,6 +4,7 @@ const cache1 = require("../lib/cache").sharedCache;
 const cache2 = require("../lib/cache").sharedCache;
 
 describe("Cache", () => {
+  process.env.DATABASE_NAME = "test";
   let cache;
   let testKey = "test";
   let testValue = 100;

@@ -58,8 +58,8 @@ class Explorer {
    * @param  {Integer} startBlock
    * @param  {Integer} endBlock
    */
-  fetchHistoryBlockData(startBlock, endBlock) {
-    this.reporter.infura.fetchHistoryBlockData(startBlock, endBlock);
+  fetchHistoricalBlockData(startBlock, endBlock) {
+    this.reporter.infura.fetchHistoricalBlockData(startBlock, endBlock);
   }
 
   static get DEFAULTS() {

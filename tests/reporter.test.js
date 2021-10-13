@@ -11,9 +11,12 @@ describe("Reporter", () => {
 
   beforeEach(async () => {
     reporter = new Reporter();
+    reporter.start();
   });
 
-  afterEach(() => {});
+  afterEach(() => {
+    reporter.stop();
+  });
 
   it("gets the report data from cached block data", async () => {
     const block = reporter.db.Block.build({ ...testBlock });
