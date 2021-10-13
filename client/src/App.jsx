@@ -7,6 +7,7 @@ import Search from "./components/Search";
 import Transactions from "./components/Transactions";
 import Container from "@material-ui/core/Container";
 
+import Progress from "./components/Progress";
 function App() {
   const [appData, setAppData] = useState({
     summary: {},
@@ -26,7 +27,7 @@ function App() {
         <AppBar startBlock={startBlock} endBlock={endBlock} />
         <Search setAppData={setAppData} setIsSearching={setIsSearching} />
         {isSearching ? (
-          <div>Searching</div>
+          <Progress />
         ) : (
           <Fragment>
             <Summary summary={summary} />
