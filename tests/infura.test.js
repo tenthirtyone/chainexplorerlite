@@ -1,15 +1,15 @@
+process.env.NODE_ENV = "test";
+process.env.DATABASE_NAME = "test";
 require("dotenv").config();
 const expect = require("expect");
 const Infura = require("../lib/infura");
 const { blockData, transactionsData } = require("./data");
 
 describe("Infura", () => {
-  process.env.DATABASE_NAME = "test";
   let infura;
   let testBlock = blockData;
   let testTx = transactionsData[0];
   let testTxs = transactionsData;
-  process.env.NODE_ENV = "test";
 
   beforeEach(async () => {
     infura = new Infura();

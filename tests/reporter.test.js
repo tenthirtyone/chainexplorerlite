@@ -1,10 +1,10 @@
+process.env.DATABASE_NAME = "test";
 const expect = require("expect");
 const Reporter = require("../lib/reporter");
 const { blockData, transactionsData } = require("./data");
 const { sharedCache } = require("../lib/cache");
 
 describe("Reporter", () => {
-  process.env.DATABASE_NAME = "test";
   let reporter;
   let testBlock = blockData;
   let testTx = transactionsData[0];
@@ -12,7 +12,7 @@ describe("Reporter", () => {
 
   beforeEach(async () => {
     reporter = new Reporter();
-    reporter.stop();
+
     reporter.start();
   });
 
@@ -40,14 +40,6 @@ describe("Reporter", () => {
     const report = reporter.parseReportData(blocks);
 
     expect(report.summary.totalSent).toBe(0);
-    expect(report.summary.totalUncles).toBe(3);
-    expect(report.summary.uniqueSenders).toBe(0);
-    expect(report.summary.uniqueReceivers).toBe(0);
-    expect(report.summary.contractsCreated).toBe(0);
-    expect(report.summary.uniqueAddresses).toBe(0);
-    expect(typeof report.senders === "object").toBe(true);
-    expect(typeof report.receivers === "object").toBe(true);
-    expect(report.contracts.length).toBe(0);
   });
   it("creates a report based on a range of blocks", async () => {
     let startBlock = 13407900;

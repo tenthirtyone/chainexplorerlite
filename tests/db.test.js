@@ -1,9 +1,9 @@
+process.env.DATABASE_NAME = "test";
 const expect = require("expect");
 const DB = require("../lib/db");
 const { blockData, transactionsData } = require("./data");
 
 describe("DB", () => {
-  process.env.DATABASE_NAME = "test";
   let db;
   let database = "test";
   let testBlock = blockData;

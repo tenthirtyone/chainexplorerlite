@@ -166,10 +166,6 @@ $ npm run test
 
   I was able to fetch from Infura reasonably quickly, but did not go beyond 100 rps. I tried to target a number that was greater than Ethereum's TPS and would allow for a single service to fetch previous data while still backfilling chain data. At scale, it would be possible to implement something that runs in parallel or horizontally scales and backfills the chain data quickly. Especially if relying on your own in-house nodes.
 
-- Database
-
-  The first real limitation I hit was the in-memory db having a journaling issue where transactions were saving before their blocks were written. This messed up the associations and led to missing data. At scale, an enterprise db or even system-level db service would reduce this bottleneck. The DB will warn/error on duplicate saves, however this is uncommon as the services check the cache, and the cache is loaded from the db at startup.
-
 - Data Availability
 
   I chose to build around the cache strategy. Although, if the user requests data that is not cache'd the Infura service will request the block data from Infura, cache, and save the data. If support for massive queries is desired caching the blocks and their data is a good first step.

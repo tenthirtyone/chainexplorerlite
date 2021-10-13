@@ -1,3 +1,4 @@
+process.env.NODE_ENV = "test";
 const expect = require("expect");
 const API = require("../lib/api");
 const { logRequest } = require("../lib/api/middleware");
@@ -5,7 +6,6 @@ const { logRequest } = require("../lib/api/middleware");
 describe("API", () => {
   let api;
   const testPort = 9001;
-  process.env.NODE_ENV = "test";
 
   beforeEach(() => {
     api = new API({ port: testPort });
