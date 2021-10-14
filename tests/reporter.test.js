@@ -47,7 +47,8 @@ describe("Reporter", () => {
     await reporter.infura.fetchHistoricalBlockData(startBlock, endBlock);
 
     const report = await reporter.createRangeReport(startBlock, endBlock);
-    expect(report.summary.totalSent === 147.12923719078603).toBe(true);
+
+    expect(report.summary.totalSent === '147.129237190786059927').toBe(true);
     expect(report.summary.totalUncles === 0).toBe(true);
     expect(report.summary.uniqueSenders === 296).toBe(true);
     expect(report.summary.uniqueReceivers === 214).toBe(true);
@@ -64,7 +65,7 @@ describe("Reporter", () => {
 
     const report = await reporter.createLastNReport(1);
 
-    expect(report.summary.totalSent === 147.12923719078603).toBe(true);
+    expect(report.summary.totalSent === '147.129237190786059927').toBe(true);
     expect(report.summary.totalUncles === 0).toBe(true);
     expect(report.summary.uniqueSenders === 296).toBe(true);
     expect(report.summary.uniqueReceivers === 214).toBe(true);

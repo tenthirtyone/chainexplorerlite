@@ -4,12 +4,6 @@ import Card from "../Card";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
-function formatEth(val) {
-  if (val === 0) return val;
-
-  return val / 1e18;
-}
-
 function TransactionList({ txs, contractDictionary, heading }) {
   const defaultPageSize = 25;
   const [pageSize, setPageSize] = useState(defaultPageSize);
@@ -28,7 +22,7 @@ function TransactionList({ txs, contractDictionary, heading }) {
           <Card
             key={key}
             label={key}
-            heading={formatEth(txs[key])}
+            heading={txs[key]}
             isContract={contractDictionary.indexOf(key)}
           />
         );
