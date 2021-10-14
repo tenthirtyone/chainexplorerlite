@@ -1,4 +1,5 @@
 node_modules
 memory
+memory-journal
 .env
 .nyc_output
