@@ -27,9 +27,10 @@ class Explorer {
    */
   start() {
     this.logger.info("App starting...");
-    this.api.start();
     this.sharedCache.populateCache();
     this.reporter.start();
+    this.reporter.infura.fetchLatest();
+    this.api.start();
     this.logger.info("App started.");
   }
 

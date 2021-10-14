@@ -59,7 +59,7 @@ npm install
 
 2. Refer to the `.env.example` file to create a new `.env` file. Defaults will work fine with a provided Infura Id.
 
-3. Fetch some block data. The Infura service will listen for new blocks, however, a convenience method is provided to fetch the previous N blocks. This is outside of the reporting service, which relies exclusively on cached block data _For a more in-depth explanation see the Assumptions section below_
+3. Fetch some block data. The Infura service will listen for new blocks, however, a convenience method is provided to fetch the previous N blocks. This is outside of the reporting service, which relies on cached block data but will fallback on making requests to Infura if the block is not saved/cached _For a more in-depth explanation see the Assumptions section below_
 
 ```sh
 node

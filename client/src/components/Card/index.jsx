@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     margin: "1em",
   },
   title: {
-    fontSize: 14,
+    fontSize: 12,
   },
   pos: {
     marginBottom: 12,
