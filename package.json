@@ -1,0 +1,28 @@
+{
+  "name": "chainexplorer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "npm install --prefix ./client; npm run build --prefix ./client;"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bignumber.js": "^9.0.1",
+    "bunyan": "^1.8.15",
+    "bunyan-format": "^0.2.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "lru-cache": "^6.0.0",
+    "sequelize": "^6.6.5",
+    "sqlite3": "^5.0.2",
+    "web3-eth": "^1.6.0"
+  },
+  "devDependencies": {
+    "expect": "^27.2.4",
+    "mocha": "^9.1.2",
+    "nyc": "^15.1.0"
+  }
+}
