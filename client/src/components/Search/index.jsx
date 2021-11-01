@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -13,8 +14,10 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     margin: theme.spacing(1),
-
     width: "25ch",
+  },
+  padding10: {
+    padding: 10,
   },
 }));
 
@@ -69,68 +72,71 @@ export default function Search({ setAppData, setIsSearching }) {
   }
 
   return (
-    <Grid container className={classes.root}>
+    <Grid container className={classes.root} spacing={4}>
       <Grid item xs={12} md={6}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Typography variant="h6" className={classes.title}>
-              Search by Range
-            </Typography>
-            <TextField
-              className={classes.textField}
-              label="Start Block"
-              variant="outlined"
-              margin="dense"
-              value={startBlock}
-              onChange={updateStartBlock}
-            />
-            <TextField
-              className={classes.textField}
-              label="End Block"
-              variant="outlined"
-              margin="dense"
-              value={endBlock}
-              onChange={updateEndBlock}
-            />
+        <Card className={classes.padding10}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant="h6" className={classes.title}>
+                Search by Range
+              </Typography>
+              <TextField
+                className={classes.textField}
+                label="Start Block"
+                variant="outlined"
+                margin="dense"
+                value={startBlock}
+                onChange={updateStartBlock}
+              />
+              <TextField
+                className={classes.textField}
+                label="End Block"
+                variant="outlined"
+                margin="dense"
+                value={endBlock}
+                onChange={updateEndBlock}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={getRangeReportData}
+              >
+                Search
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={getRangeReportData}
-            >
-              Search
-            </Button>
-          </Grid>
-        </Grid>
+        </Card>
       </Grid>
       <Grid item xs={12} md={6}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Typography variant="h6" className={classes.title}>
-              Search by Last N Blocks
-            </Typography>
-            <TextField
-              className={classes.textField}
-              label="Blocks ago"
-              variant="outlined"
-              margin="dense"
-              value={lastNBlocks}
-              onChange={updateLastNBlocks}
-            />
+        <Card className={classes.padding10}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant="h6" className={classes.title}>
+                Search by Last N Blocks
+              </Typography>
+              <TextField
+                className={classes.textField}
+                label="Blocks ago"
+                variant="outlined"
+                margin="dense"
+                value={lastNBlocks}
+                onChange={updateLastNBlocks}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={getLastNBlocks}
+              >
+                Search
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={getLastNBlocks}
-            >
-              Search
-            </Button>
-          </Grid>
-        </Grid>
+        </Card>
       </Grid>
-      <Grid item xs={12}></Grid>
     </Grid>
   );
 }

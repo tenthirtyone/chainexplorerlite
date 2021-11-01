@@ -9,7 +9,6 @@ const useStyles = makeStyles({
   root: {
     minWidth: 175,
     minHeight: 155,
-    margin: "1em",
   },
   title: {
     fontSize: 12,
@@ -19,11 +18,11 @@ const useStyles = makeStyles({
   },
 });
 
-export default function SummaryCard({ label, heading, isContract }) {
+export default function SummaryCard({ label, heading, isContract, style }) {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} style={style}>
       <CardContent>
         <Typography
           className={classes.title}

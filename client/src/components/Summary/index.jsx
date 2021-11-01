@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "../Card";
+import SummaryCard from "../SummaryCard";
 import Grid from "@material-ui/core/Grid";
 
 function capitalizeCamelCase(str) {
@@ -14,7 +14,7 @@ export default function Summary({ summary }) {
       {Object.keys(summary).map((cardItem) => {
         return (
           <Grid item xs={12} md={4} key={cardItem}>
-            <Card
+            <SummaryCard
               label={capitalizeCamelCase(cardItem)}
               heading={summary[cardItem]}
             />
